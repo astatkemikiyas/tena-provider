@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
         <div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
           <i class="pi pi-heart text-white text-sm"></i>
         </div>
-        <span class="font-semibold text-slate-800 text-sm tracking-tight">Tena Provider</span>
+        <span class="font-semibold text-slate-800 text-sm tracking-tight">TenaDigital Provider</span>
       </div>
       <nav class="flex-1 px-3 py-4 space-y-0.5">
         <p class="px-3 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Workspace</p>
