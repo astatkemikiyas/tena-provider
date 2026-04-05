@@ -6,6 +6,8 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { provideApi } from './api';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,5 +21,6 @@ export const appConfig: ApplicationConfig = {
         options: { darkModeSelector: '.dark', cssLayer: false },
       },
     }),
+    provideApi(environment.apiUrl),
   ],
 };

@@ -1,16 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { ProviderService } from '../../../api';
 import { AppointmentDTO, StatusUpdateRequest } from '../../../shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class AppointmentService {
-  private http = inject(HttpClient);
-  private base = `${environment.apiUrl}/api/provider/appointments`;
+  private api = inject(ProviderService);
 
-  getAll()                                              { return this.http.get<AppointmentDTO[]>(this.base); }
-  getById(id: number)                                   { return this.http.get<AppointmentDTO>(`${this.base}/${id}`); }
-  create(dto: AppointmentDTO)                           { return this.http.post<AppointmentDTO>(this.base, dto); }
-  cancel(id: number)                                    { return this.http.delete<void>(`${this.base}/${id}`); }
-  updateStatus(id: number, req: StatusUpdateRequest)    { return this.http.patch<AppointmentDTO>(`${this.base}/${id}/status`, req); }
+  getAll()                                           { return this.api.getAppointments(); }
+  getById(id: number)                                { return this.api.getAppointmentById(id); }
+  create(dto: AppointmentDTO)                        { return this.api.createAppointment(dto); }
+  cancel(id: number)                                 { return this.api.cancelAppointment(id); }
+  updateStatus(id: number, req: StatusUpdateRequest) { return this.api.updateAppointmentStatus(id, req); }
 }

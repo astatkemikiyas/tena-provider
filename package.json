@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "generate:api": "openapi-generator-cli generate -i specs/provider-api.yaml -g typescript-angular -o src/app/api --additional-properties=ngVersion=17,providedIn=root,supportsES6=true,enumPropertyNaming=original,modelPropertyNaming=camelCase --global-property=modelDocs=false,apiDocs=false,apiTests=false,modelTests=false"
   },
   "prettier": {
     "printWidth": 100,
@@ -50,6 +51,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "@openapitools/openapi-generator-cli": "^2.15.3"
   }
 }
