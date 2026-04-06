@@ -10,15 +10,15 @@ import { HospitalContextService } from '../../core/services/hospital-context.ser
   standalone: true,
   imports: [CommonModule],
   template: `
-    <header class="flex items-center justify-between h-14 px-6 bg-white border-b border-slate-200">
+    <header class="flex items-center justify-between h-14 px-6 bg-white border-b border-slate-100">
       <div>
-        <h1 class="text-sm font-semibold text-slate-800">{{ title() }}</h1>
+        <h1 class="text-sm font-bold text-slate-900 tracking-tight">{{ title() }}</h1>
         @if (ctx.selectedHospital()) {
-          <p class="text-xs text-slate-400">{{ ctx.selectedHospital()!.name }}</p>
+          <p class="text-xs text-slate-400 font-medium mt-0.5">{{ ctx.selectedHospital()!.name }}</p>
         }
       </div>
       <div class="flex items-center gap-2">
-        <button class="w-9 h-9 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 transition-colors">
+        <button class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
           <i class="pi pi-bell text-sm"></i>
         </button>
       </div>
