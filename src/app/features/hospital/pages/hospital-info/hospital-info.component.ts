@@ -57,7 +57,7 @@ import { HospitalInfoDTO } from '../../../../shared/models';
               </div>
               <div>
                 <p class="text-xs text-slate-400 uppercase tracking-wider">Status</p>
-                <span [class]="statusClass(info()!.status)">{{ info()!.status }}</span>
+                <span [class]="statusClass(info()!.status!)">{{ info()!.status }}</span>
               </div>
               <div>
                 <p class="text-xs text-slate-400 uppercase tracking-wider">Region</p>
@@ -93,7 +93,7 @@ export class HospitalInfoComponent implements OnInit {
   ngOnInit() {
     const h = this.ctx.selectedHospital();
     if (!h) return;
-    this.svc.getById(h.id).subscribe({
+    this.svc.getById(h.id!).subscribe({
       next: d => this.info.set(d),
       complete: () => this.loading.set(false),
     });
@@ -107,7 +107,7 @@ export class HospitalInfoComponent implements OnInit {
 
   save() {
     this.saving.set(true);
-    this.svc.update(this.info()!.id, this.form).subscribe({
+    this.svc.update(this.info()!.id!, this.form).subscribe({
       next: updated => {
         this.info.set(updated);
         this.editing.set(false);

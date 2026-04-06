@@ -88,7 +88,7 @@ export class AppointmentListComponent implements OnInit {
     this.loading.set(true);
     this.svc.getAll().subscribe({ next: d => this.appointments.set(d), complete: () => this.loading.set(false) });
   }
-  openStatus(a: AppointmentDTO) { this.selected.set(a); this.newStatus = a.status!; this.showStatus = true; }
+  openStatus(a: AppointmentDTO) { this.selected.set(a); this.newStatus = a.status! as AppointmentStatus; this.showStatus = true; }
   applyStatus() {
     this.saving.set(true);
     this.svc.updateStatus(this.selected()!.id!, { status: this.newStatus }).subscribe({

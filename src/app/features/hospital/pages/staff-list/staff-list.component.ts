@@ -96,7 +96,7 @@ export class StaffListComponent implements OnInit {
     const h = this.ctx.selectedHospital();
     if (!h) return;
     this.loading.set(true);
-    this.svc.getStaff(h.id).subscribe({
+    this.svc.getStaff(h.id!).subscribe({
       next: data => this.staff.set(data),
       complete: () => this.loading.set(false),
     });
@@ -104,8 +104,8 @@ export class StaffListComponent implements OnInit {
 
   approve(s: HospitalStaffDTO) {
     const h = this.ctx.selectedHospital()!;
-    this.actionLoading.set(s.userId);
-    this.svc.approveStaff(h.id, s.userId).subscribe({
+    this.actionLoading.set(s.userId!);
+    this.svc.approveStaff(h.id!, s.userId!).subscribe({
       next: updated => {
         this.staff.update(list => list.map(x => x.userId === updated.userId ? updated : x));
         this.msg.add({ severity: 'success', summary: 'Staff approved' });
@@ -116,7 +116,7 @@ export class StaffListComponent implements OnInit {
 
   changeRole(s: HospitalStaffDTO) {
     const h = this.ctx.selectedHospital()!;
-    this.svc.changeRole(h.id, s.userId, s.role).subscribe({
+    this.svc.changeRole(h.id!, s.userId!, s.role!).subscribe({
       next: updated => this.staff.update(list => list.map(x => x.userId === updated.userId ? updated : x)),
       error: () => this.msg.add({ severity: 'error', summary: 'Failed to update role' }),
     });
@@ -127,7 +127,7 @@ export class StaffListComponent implements OnInit {
       message: 'Remove this staff member from the hospital?',
       accept: () => {
         const h = this.ctx.selectedHospital()!;
-        this.svc.removeStaff(h.id, s.userId).subscribe({
+        this.svc.removeStaff(h.id!, s.userId!).subscribe({
           next: () => {
             this.staff.update(list => list.filter(x => x.userId !== s.userId));
             this.msg.add({ severity: 'success', summary: 'Staff removed' });

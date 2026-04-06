@@ -67,7 +67,7 @@ export class InviteComponent {
     if (!h) return;
 
     this.loading.set(true);
-    this.svc.invite(h.id, emails).subscribe({
+    this.svc.invite(h.id!, emails).subscribe({
       next: (res: any) => {
         this.inviteLinks.set(res.inviteLinks ?? []);
         this.msg.add({ severity: 'success', summary: `${res.sent} invitation(s) created` });

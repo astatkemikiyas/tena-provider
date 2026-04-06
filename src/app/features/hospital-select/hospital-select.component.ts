@@ -44,7 +44,7 @@ import { HospitalSummaryDTO } from '../../shared/models';
                     <p class="text-sm text-slate-500 mt-0.5">Role: {{ h.userRole }}</p>
                   </div>
                   <div class="flex flex-col items-end gap-1">
-                    <span [class]="statusBadgeClass(h.status)">{{ h.status }}</span>
+                    <span [class]="statusBadgeClass(h.status!)">{{ h.status }}</span>
                     @if (h.status === 'APPROVED') {
                       <i class="pi pi-chevron-right text-slate-400 text-sm"></i>
                     }
