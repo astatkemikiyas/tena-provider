@@ -3,6 +3,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { HospitalContextService } from './hospital-context.service';
 
 interface TokenResponse {
   access_token:  string;
@@ -25,6 +26,7 @@ export class AuthService {
 
   private router = inject(Router);
   private oauthService = inject(OAuthService);
+  private hospitalCtx = inject(HospitalContextService);
 
   // Initialized after APP_INITIALIZER has run loadDiscoveryDocumentAndTryLogin()
   readonly isAuthenticated = signal(this.oauthService.hasValidAccessToken());
@@ -48,6 +50,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.hospitalCtx.clearHospital();
     this.oauthService.logOut();
     this.isAuthenticated.set(false);
   }
