@@ -1,35 +1,34 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
-import { OAuthStorage, OAuthService } from 'angular-oauth2-oidc';
+import { catchError, throwError } from 'rxjs';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
-function addBearer(req: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
+function addBearer(req: import('@angular/common/http').HttpRequest<unknown>, token: string) {
   return req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const storage = inject(OAuthStorage);
   const oauthService = inject(OAuthService);
+  const router       = inject(Router);
 
-  // Only attach the Bearer token to requests going to our own backend API.
-  // Keycloak's token endpoint and other external URLs must NOT receive it.
   const isOurApi = req.url.startsWith(environment.apiUrl);
   const isPublic = req.url.includes('/api/public/');
 
-  const token = storage.getItem('access_token');
-  // Public endpoints must never receive a Bearer token — Spring Security
-  // validates any token it finds, rejecting expired ones even on permitAll() routes.
+  const token    = oauthService.getAccessToken();
   const outgoing = (token && isOurApi && !isPublic) ? addBearer(req, token) : req;
 
   return next(outgoing).pipe(
     catchError(err => {
-      // If we get a 401 on a protected API, log the user out since silent refresh failed
       if (err.status === 401 && isOurApi && !isPublic) {
-        oauthService.logOut();
+        // Clear tokens locally without redirecting to Keycloak's end_session endpoint.
+        // A browser redirect would restart the app and lose context; instead navigate
+        // to the login page within Angular so the user can sign in again seamlessly.
+        oauthService.logOut(true);
+        router.navigate(['/login']);
       }
       return throwError(() => err);
     }),
-
   );
 };

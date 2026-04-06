@@ -51,5 +51,7 @@ export const routes: Routes = [
       },
     ],
   },
+  // Keycloak redirect URI lands here — APP_INITIALIZER already handled the code exchange
+  { path: 'callback', redirectTo: '/', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];

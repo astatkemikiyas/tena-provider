@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -8,7 +8,16 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideApi } from './api';
 import { environment } from '../environments/environment';
-import { provideOAuthClient } from 'angular-oauth2-oidc';
+import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
+import { authConfig } from './core/config/auth.config';
+
+function initializeOAuth(oauthService: OAuthService): () => Promise<void> {
+  return async () => {
+    oauthService.configure(authConfig);
+    await oauthService.loadDiscoveryDocumentAndTryLogin();
+    oauthService.setupAutomaticSilentRefresh();
+  };
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,5 +33,11 @@ export const appConfig: ApplicationConfig = {
     }),
     provideApi(environment.apiUrl),
     provideOAuthClient(),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeOAuth,
+      deps: [OAuthService],
+      multi: true,
+    },
   ],
 };

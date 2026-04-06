@@ -1,9 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from '../config/auth.config';
-import { environment } from '../../../environments/environment';
 
 interface TokenResponse {
   access_token:  string;
@@ -27,18 +26,17 @@ export class AuthService {
   private router = inject(Router);
   private oauthService = inject(OAuthService);
 
-  readonly isAuthenticated = signal(false);
+  // Initialized after APP_INITIALIZER has run loadDiscoveryDocumentAndTryLogin()
+  readonly isAuthenticated = signal(this.oauthService.hasValidAccessToken());
 
   constructor() {
-    this.configureOauth();
-  }
-
-  private configureOauth() {
-    this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-      this.isAuthenticated.set(this.oauthService.hasValidAccessToken());
-      this.oauthService.setupAutomaticSilentRefresh();
-    });
+    // Only react to token lifecycle events — ignore discovery/JWKS/session events
+    // that fire mid-flight and could temporarily return false from hasValidAccessToken().
+    this.oauthService.events
+      .pipe(filter(e => ['token_received', 'token_refreshed', 'token_error', 'logout', 'session_terminated', 'session_error'].includes(e.type)))
+      .subscribe(() => {
+        this.isAuthenticated.set(this.oauthService.hasValidAccessToken());
+      });
   }
 
   getToken(): string | null {
