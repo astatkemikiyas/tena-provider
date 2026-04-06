@@ -1,8 +1,9 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:8082',
-  keycloakUrl: 'http://localhost:8080',
-  keycloakRealm: 'master',
-  keycloakClientId: 'tena-provider',
+  oidcIssuer: 'http://localhost:8080/realms/tena-dev',
+  oidcClientId: 'tena-provider',
+  oidcRedirectUri: 'http://localhost:4202/callback',
+  oidcScope: 'openid profile email',
   appName: 'TenaDigital Provider',
 };
